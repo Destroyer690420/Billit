@@ -429,6 +429,11 @@ export default function InvoicePrint() {
     const renderInvoice = (copyNumber) => (
         <div className="a4-page">
             <div className="invoice-border-box">
+                {company.bannerDataUrl && (
+                    <div className="invoice-banner">
+                        <img src={company.bannerDataUrl} alt="Company Banner" />
+                    </div>
+                )}
                 <div className="header-title">
                     <span style={{ flex: 1 }}>{documentTitle}</span>
                     <span style={{ fontWeight: 'normal', fontStyle: 'italic', fontSize: '8pt' }}>({getCopyText(copyNumber)})</span>
@@ -500,7 +505,7 @@ export default function InvoicePrint() {
                     </div>
                 </div>
 
-                <div className="" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <div className="items-table-wrapper">
                     <table className="items-table" style={{ height: '100%' }}>
                         <thead>
                             <tr>
@@ -744,7 +749,10 @@ export default function InvoicePrint() {
                     page-break-after: auto;
                 }
 
-                .invoice-border-box { border: 1px solid #000; display: flex; flex-direction: column; height: 282mm; }
+                .invoice-border-box { border: 1px solid #000; display: flex; flex-direction: column; height: 282mm; overflow: hidden; }
+                .invoice-banner { border-bottom: 1px solid #000; text-align: center; padding: 0; flex-shrink: 0; }
+                .invoice-banner img { width: 100%; max-height: 80px; object-fit: contain; display: block; }
+                .items-table-wrapper { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
                 .row { display: flex; border-bottom: 1px solid #000; }
                 .col { padding: 4px; border-right: 1px solid #000; }
                 .col:last-child { border-right: none; }

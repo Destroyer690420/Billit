@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle2, Moon, Sun, Upload, Trash2 } from "lucide-react";
+import { CheckCircle2, Moon, Sun, Upload, Trash2, ImageIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { STATE_CODES, getStateNameByCode } from "@/lib/stateCodes";
 
@@ -31,9 +31,60 @@ export default function Settings() {
         ifsc: "",
         branch: "",
         signatureDataUrl: "",
+        bannerDataUrl: "",
     });
 
     const signatureInputRef = useRef(null);
+    const bannerInputRef = useRef(null);
+
+    const handleBannerUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            setError("Invalid file type. Please upload a PNG, JPEG, or WebP image.");
+            e.target.value = '';
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            setError("File too large. Maximum size is 5MB.");
+            e.target.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_W = 800, MAX_H = 200;
+                let w = img.width, h = img.height;
+                // Smart resize: scale down proportionally, never stretch up
+                if (w > MAX_W) { h = h * (MAX_W / w); w = MAX_W; }
+                if (h > MAX_H) { w = w * (MAX_H / h); h = MAX_H; }
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                // Use high-quality image smoothing
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, 0, 0, w, h);
+                const dataUrl = canvas.toDataURL('image/png', 0.95);
+                setFormData(prev => ({ ...prev, bannerDataUrl: dataUrl }));
+                if (success) setSuccess("");
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = '';
+    };
+
+    const removeBanner = () => {
+        setFormData(prev => ({ ...prev, bannerDataUrl: "" }));
+        if (success) setSuccess("");
+    };
 
     const handleSignatureUpload = (e) => {
         const file = e.target.files[0];
@@ -280,6 +331,41 @@ export default function Settings() {
                                     <Input id="branch" value={formData.branch} onChange={handleChange} />
                                 </div>
                             </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <h3 className="font-semibold text-lg pt-4 border-t">Invoice Banner / Logo <span className="text-sm font-normal text-muted-foreground">(Optional)</span></h3>
+                            <p className="text-sm text-muted-foreground">Upload a banner or logo image. It will appear at the top of your invoices. Images are auto-resized for best quality.</p>
+                            <input
+                                ref={bannerInputRef}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleBannerUpload}
+                            />
+                            {formData.bannerDataUrl ? (
+                                <div className="space-y-3">
+                                    <div className="border rounded-lg p-3 bg-white dark:bg-zinc-900">
+                                        <img
+                                            src={formData.bannerDataUrl}
+                                            alt="Banner Preview"
+                                            style={{ maxHeight: '100px', maxWidth: '100%', objectFit: 'contain' }}
+                                        />
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button type="button" variant="outline" size="sm" onClick={() => bannerInputRef.current?.click()}>
+                                            <Upload className="h-4 w-4 mr-1" /> Change
+                                        </Button>
+                                        <Button type="button" variant="destructive" size="sm" onClick={removeBanner}>
+                                            <Trash2 className="h-4 w-4 mr-1" /> Remove
+                                        </Button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <Button type="button" variant="outline" onClick={() => bannerInputRef.current?.click()}>
+                                    <ImageIcon className="h-4 w-4 mr-2" /> Upload Banner / Logo
+                                </Button>
+                            )}
                         </div>
 
                         <div className="space-y-2">
