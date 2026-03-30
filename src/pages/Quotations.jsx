@@ -4,8 +4,9 @@ import { db } from "@/lib/firebase";
 import { collection, onSnapshot, query, orderBy, deleteDoc, doc, where, limit } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Eye, Trash2, Printer } from "lucide-react";
+import { Plus, Eye, Trash2, Printer, Search } from "lucide-react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 
@@ -13,6 +14,7 @@ export default function Quotations() {
     const { currentUser } = useAuth();
     const [quotations, setQuotations] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         if (!currentUser) return;
@@ -53,6 +55,11 @@ export default function Quotations() {
         }
     };
 
+    const filteredQuotations = quotations.filter(q =>
+        q.invoiceNo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        q.buyerDetails?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="space-y-4 sm:space-y-6">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
@@ -62,15 +69,28 @@ export default function Quotations() {
                 </Link>
             </div>
 
+            <div className="flex flex-col sm:flex-row gap-4">
+                <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                    <Input
+                        type="text"
+                        placeholder="Search by invoice number or buyer..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 w-full"
+                    />
+                </div>
+            </div>
+
             {loading ? (
                 <div className="text-center py-8">Loading...</div>
-            ) : quotations.length === 0 ? (
+            ) : filteredQuotations.length === 0 ? (
                 <div className="text-center py-8">No quotations found</div>
             ) : (
                 <>
                     {/* Mobile Card View */}
                     <div className="md:hidden space-y-4">
-                        {quotations.map((quotation) => {
+                        {filteredQuotations.map((quotation) => {
                             const docType = quotation.documentType || "Quotation";
                             return (
                                 <div key={quotation.id} className="bg-card border rounded-lg p-4 space-y-3">
@@ -135,7 +155,7 @@ export default function Quotations() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {quotations.map((quotation) => {
+                                    {filteredQuotations.map((quotation) => {
                                         const docType = quotation.documentType || "Quotation";
                                         return (
                                             <TableRow key={quotation.id}>

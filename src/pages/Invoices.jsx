@@ -4,8 +4,9 @@ import { db } from "@/lib/firebase";
 import { collection, onSnapshot, query, orderBy, deleteDoc, doc, where, limit, getDocs } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Eye, Trash2, Printer, FileText, Download } from "lucide-react";
+import { Plus, Eye, Trash2, Printer, FileText, Download, Search } from "lucide-react";
 import { format, startOfMonth, endOfMonth } from "date-fns";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -16,6 +17,7 @@ export default function Invoices() {
     const { currentUser } = useAuth();
     const [invoices, setInvoices] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
 
     // Report Generation State
     const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -143,6 +145,11 @@ export default function Invoices() {
 
     const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
 
+    const filteredInvoices = invoices.filter(inv =>
+        inv.invoiceNo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        inv.buyerDetails?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="space-y-4 sm:space-y-6">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
@@ -208,15 +215,28 @@ export default function Invoices() {
                 </div>
             </div>
 
+            <div className="flex flex-col sm:flex-row gap-4">
+                <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                    <Input
+                        type="text"
+                        placeholder="Search by invoice number or buyer..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 w-full"
+                    />
+                </div>
+            </div>
+
             {loading ? (
                 <div className="text-center py-8">Loading...</div>
-            ) : invoices.length === 0 ? (
+            ) : filteredInvoices.length === 0 ? (
                 <div className="text-center py-8">No invoices found</div>
             ) : (
                 <>
                     {/* Mobile Card View */}
                     <div className="md:hidden space-y-4">
-                        {invoices.map((invoice) => (
+                        {filteredInvoices.map((invoice) => (
                             <div key={invoice.id} className="bg-card border rounded-lg p-4 space-y-3">
                                 <div className="flex justify-between items-start">
                                     <div>
@@ -273,7 +293,7 @@ export default function Invoices() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {invoices.map((invoice) => (
+                                    {filteredInvoices.map((invoice) => (
                                         <TableRow key={invoice.id}>
                                             <TableCell className="font-medium">{invoice.invoiceNo}</TableCell>
                                             <TableCell>{invoice.date ? format(new Date(invoice.date), "dd/MM/yyyy") : "N/A"}</TableCell>

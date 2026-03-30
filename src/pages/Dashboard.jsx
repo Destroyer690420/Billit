@@ -254,11 +254,11 @@ export default function Dashboard() {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div className="hidden sm:flex sm:flex-row sm:justify-between sm:items-center gap-4">
                 <h1 className="text-2xl sm:text-3xl font-bold">
                     {currentUser?.profile?.companyProfile?.companyName || "Dashboard"}
                 </h1>
-                <Button onClick={logout} variant="outline" className="self-start sm:self-auto">Logout</Button>
+                <Button onClick={logout} variant="outline" className="self-auto">Logout</Button>
             </div>
 
             {/* Summary Cards */}

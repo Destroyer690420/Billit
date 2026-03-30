@@ -204,36 +204,6 @@ export default function Settings() {
         <div className="max-w-4xl mx-auto space-y-6">
             <h2 className="text-3xl font-bold tracking-tight">Settings</h2>
 
-            {/* Theme Toggle Card */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Appearance</CardTitle>
-                    <CardDescription>Customize the look and feel of your application.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                            <Label className="text-base">Theme</Label>
-                            <div className="text-sm text-muted-foreground">
-                                Switch between light and dark mode
-                            </div>
-                        </div>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={toggleTheme}
-                            className="h-10 w-10"
-                        >
-                            {theme === 'dark' ? (
-                                <Sun className="h-5 w-5" />
-                            ) : (
-                                <Moon className="h-5 w-5" />
-                            )}
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-
             <Card>
                 <CardHeader>
                     <CardTitle>Company Profile</CardTitle>
@@ -352,7 +322,7 @@ export default function Settings() {
                                             style={{ maxHeight: '100px', maxWidth: '100%', objectFit: 'contain' }}
                                         />
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex flex-wrap gap-2">
                                         <Button type="button" variant="outline" size="sm" onClick={() => bannerInputRef.current?.click()}>
                                             <Upload className="h-4 w-4 mr-1" /> Change
                                         </Button>
@@ -379,7 +349,7 @@ export default function Settings() {
                                 onChange={handleSignatureUpload}
                             />
                             {formData.signatureDataUrl ? (
-                                <div className="flex items-center gap-4">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                                     <div className="border rounded-lg p-3 bg-white dark:bg-zinc-900">
                                         <img
                                             src={formData.signatureDataUrl}
@@ -387,7 +357,7 @@ export default function Settings() {
                                             style={{ maxHeight: '60px', maxWidth: '200px', objectFit: 'contain' }}
                                         />
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex flex-wrap gap-2">
                                         <Button type="button" variant="outline" size="sm" onClick={() => signatureInputRef.current?.click()}>
                                             <Upload className="h-4 w-4 mr-1" /> Change
                                         </Button>
@@ -409,6 +379,36 @@ export default function Settings() {
                             </Button>
                         </div>
                     </form>
+                </CardContent>
+            </Card>
+
+            {/* Theme Toggle Card */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Appearance</CardTitle>
+                    <CardDescription>Customize the look and feel of your application.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                            <Label className="text-base">Theme</Label>
+                            <div className="text-sm text-muted-foreground">
+                                Switch between light and dark mode
+                            </div>
+                        </div>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={toggleTheme}
+                            className="h-10 w-10"
+                        >
+                            {theme === 'dark' ? (
+                                <Sun className="h-5 w-5" />
+                            ) : (
+                                <Moon className="h-5 w-5" />
+                            )}
+                        </Button>
+                    </div>
                 </CardContent>
             </Card>
         </div>
