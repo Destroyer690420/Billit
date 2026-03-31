@@ -1,6 +1,6 @@
-# Bharatbill
+# Billit
 
-A modern, comprehensive billing, invoicing, and business management web application. Built with a focus on simplicity, ease of use, and professional invoice generation, Bharatbill helps small businesses and freelancers streamline their day-to-day operations.
+A modern, comprehensive billing, invoicing, and business management web application. Built with a focus on simplicity, ease of use, and professional invoice generation, Billit helps small businesses and freelancers streamline their day-to-day operations.
 
 ## 🚀 Features
 

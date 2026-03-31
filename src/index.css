@@ -122,19 +122,19 @@
   }
 }
 
-/* Table styling */
+/* Table styling — scoped to app tables only, NOT invoice/quotation print views */
 @layer components {
-  /* Alternating row colors */
-  table tbody tr:nth-child(even) {
+  /* Alternating row colors (exclude print pages) */
+  :where(main) table tbody tr:nth-child(even) {
     background-color: hsl(var(--table-row-alt));
   }
 
-  /* Table header styling */
-  table thead tr {
+  /* Table header styling (exclude print pages) */
+  :where(main) table thead tr {
     background-color: hsl(var(--table-header));
   }
 
-  table thead th {
+  :where(main) table thead th {
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.75rem;

@@ -127,10 +127,10 @@ export default function Login() {
             <Card className="w-full max-w-md">
                                                 <CardHeader className="flex flex-col items-center pb-6">
                     <div className="h-20 w-full flex items-center justify-center mb-4 overflow-hidden">
-                        <img src="/logo.png" alt="Bharat Bill" className="h-full w-auto scale-95 drop-shadow-md light-logo" />
-                        <img src="/darkmodelogo.png" alt="Bharat Bill" className="h-full w-auto scale-125 drop-shadow-md dark-logo" />
+                        <img src="/logo.png" alt="Billit" className="h-full w-auto scale-95 drop-shadow-md light-logo" />
+                        <img src="/darkmodelogo.png" alt="Billit" className="h-full w-auto scale-125 drop-shadow-md dark-logo" />
                     </div>
-                    <CardTitle className="text-2xl text-center sr-only">Welcome to Bharat Bill</CardTitle>
+                    <CardTitle className="text-2xl text-center sr-only">Welcome to Billit</CardTitle>
                     <CardDescription className="text-center font-medium">Accounting & Invoicing Simplified</CardDescription>
                 </CardHeader>
                 <CardContent>

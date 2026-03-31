@@ -7,7 +7,7 @@ export default function AboutUs() {
             name: "Daksh",
             role: "CEO",
             initials: "D",
-            description: "Leading the vision and strategy of Bharat Bill."
+            description: "Leading the vision and strategy of Billit."
         },
         {
             name: "Dakshay Sachdeva",
@@ -55,7 +55,7 @@ export default function AboutUs() {
                 </CardHeader>
                 <CardContent>
                     <p className="text-muted-foreground">
-                        Bharat Bill is dedicated to simplifying billing and invoicing for businesses across India.
+                        Billit is dedicated to simplifying billing and invoicing for businesses across India.
                         Our goal is to provide a seamless, efficient, and user-friendly platform that empowers
                         entrepreneurs to focus on what they do best - growing their business.
                     </p>

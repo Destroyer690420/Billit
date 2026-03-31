@@ -76,8 +76,8 @@ export default function Layout({ children }) {
             >
                 <div className="flex items-center justify-start h-20 px-6 overflow-hidden">
                     <Link to="/" className="flex items-center justify-start w-full h-full">
-                        <img src="/logo.png" alt="Bharat Bill" className="w-[85%] h-auto scale-95 origin-left drop-shadow-sm light-logo" />
-                        <img src="/darkmodelogo.png" alt="Bharat Bill" className="w-[85%] h-auto scale-125 origin-left drop-shadow-sm dark-logo" />
+                        <img src="/logo.png" alt="Billit" className="w-[85%] h-auto scale-95 origin-left drop-shadow-sm light-logo" />
+                        <img src="/darkmodelogo.png" alt="Billit" className="w-[85%] h-auto scale-125 origin-left drop-shadow-sm dark-logo" />
                     </Link>
                 </div>
 
