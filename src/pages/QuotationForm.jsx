@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, Plus, Save } from "lucide-react";
 import { format } from "date-fns";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getShortFinancialYear } from "@/lib/utils";
 
 export default function QuotationForm() {
     const { currentUser } = useAuth();
@@ -83,6 +84,8 @@ export default function QuotationForm() {
     }, []);
 
     // Auto-generate Invoice Number based on Document Type
+    const watchedDate = watch("date");
+
     useEffect(() => {
         if (!currentUser || id) return; // Don't auto-generate when editing
 
@@ -98,14 +101,17 @@ export default function QuotationForm() {
 
             let nextNumber = 1;
             let prefix = "";
+            const shortFY = getShortFinancialYear(watchedDate);
 
             if (docType === "Proforma Invoice") {
                 // Format: NFI/PI/2325/XX
-                prefix = "NFI/PI/2325/";
+                prefix = `NFI/PI/${shortFY}/`;
+
+                const regex = new RegExp(`^NFI/PI/${shortFY}/(\\d+)$`);
 
                 const numbers = sameTypeInvoices
                     .map(inv => {
-                        const match = inv.invoiceNo?.match(/NFI\/PI\/2325\/(\d+)/);
+                        const match = inv.invoiceNo?.match(regex);
                         return match ? parseInt(match[1]) : 0;
                     })
                     .filter(n => n > 0);
@@ -115,11 +121,13 @@ export default function QuotationForm() {
                 }
             } else if (docType === "Quotation") {
                 // Format: QT/2325/XX
-                prefix = "QT/2325/";
+                prefix = `QT/${shortFY}/`;
+
+                const regex = new RegExp(`^QT/${shortFY}/(\\d+)$`);
 
                 const numbers = sameTypeInvoices
                     .map(inv => {
-                        const match = inv.invoiceNo?.match(/QT\/2325\/(\d+)/);
+                        const match = inv.invoiceNo?.match(regex);
                         return match ? parseInt(match[1]) : 0;
                     })
                     .filter(n => n > 0);
@@ -134,7 +142,7 @@ export default function QuotationForm() {
         };
 
         generateInvoiceNumber();
-    }, [currentUser, id, watch("documentType")]);
+    }, [currentUser, id, watch("documentType"), watchedDate, setValue]);
 
     // Fetch Quotation if editing
     useEffect(() => {

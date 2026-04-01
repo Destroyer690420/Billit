@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, Plus, Save } from "lucide-react";
 import { format } from "date-fns";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getFinancialYear } from "@/lib/utils";
 
 export default function InvoiceForm() {
     const { currentUser } = useAuth();
@@ -83,6 +84,8 @@ export default function InvoiceForm() {
     }, []);
 
     // Auto-generate Tax Invoice Number
+    const watchedDate = watch("date");
+
     useEffect(() => {
         if (!currentUser || id) return; // Don't auto-generate when editing
 
@@ -96,13 +99,14 @@ export default function InvoiceForm() {
 
             let nextNumber = 1;
             const userPrefix = currentUser?.profile?.companyProfile?.invoicePrefix || "INV";
-            const prefix = `${userPrefix}/2025-26/`;
+            const currentFY = getFinancialYear(watchedDate);
+            const prefix = `${userPrefix}/${currentFY}/`;
 
             // Extract numbers from existing tax invoices
             // We need to be careful with regex as the prefix might contain special characters
             // Escaping special characters in userPrefix for regex
             const escapedPrefix = userPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const regex = new RegExp(`${escapedPrefix}/2025-26/(\\d+)`);
+            const regex = new RegExp(`^${escapedPrefix}/${currentFY}/(\\d+)$`);
 
             const numbers = taxInvoices
                 .map(inv => {
@@ -120,7 +124,7 @@ export default function InvoiceForm() {
         };
 
         generateInvoiceNumber();
-    }, [currentUser, id, setValue]);
+    }, [currentUser, id, setValue, watchedDate]);
 
     // Fetch Invoice if editing
     useEffect(() => {
